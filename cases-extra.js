@@ -1,0 +1,82 @@
+window.EVIDENCE_EXTRA = {
+  apartemen: {
+    1: "Baut lain di sisi yang sama tampak berkarat dan tidak pernah diganti sejak gedung dibangun.",
+    2: "Pihak pengelola tidak mencatat siapa yang terakhir mengambil kunci cadangan dari kantor.",
+    3: "Teknisi gedung mengatakan sistem kunci sempat error selama beberapa menit pada malam itu.",
+    4: "Kartu yang sama juga dipakai dua kali di lantai 12 sebelum pukul 21.40, tercatat sebagai pemeriksaan rutin.",
+    5: "Andre sempat mengirim pesan kepada Dewi pukul 21.15 yang belum dibaca sampai pagi.",
+    6: "Yoga juga memesan pembersihan tambahan untuk unitnya minggu lalu, dan catatannya belum pernah diperiksa ulang.",
+    7: "Beberapa penghuni lain juga mengeluhkan biaya perawatan yang tampak tidak wajar.",
+    8: "Kamera lift lantai dasar rusak selama dua jam sejak pukul 21.00 karena korsleting kecil.",
+    9: "Dewi juga menulis bahwa ia takut pada seseorang yang sering datang ke lantai 17 tanpa alasan jelas.",
+    10: "Dewi memiliki kadar alkohol ringan dalam darah, yang tidak pernah ia akui kepada siapa pun."
+  },
+  arsip: {
+    1: "Cangkir itu juga memiliki bekas gula yang tidak biasa digunakan sang profesor.",
+    2: "Tomi mengakui kunci itu sempat hilang beberapa jam dan ia tidak ingat di mana menaruhnya.",
+    3: "Kartu Bagas tercatat masuk arsip hari Jumat sore, tetapi keluarnya tidak pernah tercatat.",
+    4: "Teknisi menemukan engsel pintu sedikit longgar, tetapi itu tidak cukup untuk membukanya dari luar.",
+    5: "Perbedaan tabel hanya ada di satu bagian dan mudah terlewat jika tidak diperiksa dengan teliti.",
+    6: "Petugas kebersihan biasanya selalu mengunci gerbang lorong sebelum pukul 06.00.",
+    7: "Hadi juga menulis bahwa filter baru sudah dipasang di sisi timur arsip.",
+    8: "Gerbang samping fakultas memang sering dibuka untuk pengiriman barang akhir pekan.",
+    9: "Pesan itu dikirim dari ponsel pribadi, bukan dari akun resmi fakultas.",
+    10: "Ada memar kecil di pelipis, yang diduga berasal dari jatuh ringan di meja."
+  },
+  masak2: {
+    1: "Hasil lab juga menyebut adanya rempah yang biasa digunakan dalam sup tradisional.",
+    2: "Sendok lain di kotak panitia tampak sama dan sulit dibedakan tanpa label.",
+    3: "Jas itu pernah dipinjam peserta lain sebelum babak final, menurut catatan panitia.",
+    4: "Lilis sempat mengubah takaran garam di menit terakhir, dan catatan perubahannya sudah dihapus.",
+    5: "Kuitansi itu juga memuat nominal yang tidak sesuai dengan tanggal lomba.",
+    6: "Ada seseorang lain yang lewat di belakang meja juri pada waktu yang hampir sama.",
+    7: "Beberapa juri lain juga tampak memakai sepatu hitam serupa dalam acara tersebut.",
+    8: "Formulir itu juga tidak lengkap untuk peserta lain, sehingga panitia menganggapnya hal biasa.",
+    9: "Bumbu merek itu juga dipakai peserta nomor 3 untuk salah satu hidangannya.",
+    10: "Maria mencatat jam tersebut dengan tulisan yang agak terburu-buru.",
+    11: "Yanto menulis bahwa Bambang tampak gelisah dan sering menyentuh lehernya.",
+    12: "Tidak ditemukan sisa bahan serupa dalam sampel panci lain di dapur."
+  },
+  pabrik2: {
+    1: "Teknisi listrik lain juga pernah mengeluhkan kabel panel yang tidak pernah diganti.",
+    2: "Pemegang kunci utama lebih dari satu orang, dan pencatatannya tidak selalu lengkap.",
+    3: "Ruang panel juga bisa dibuka dari dalam pos jika pintunya tidak dikunci rapat.",
+    4: "Formulir itu juga pernah ditandatangani untuk barang lain di bulan yang sama.",
+    5: "Haryo juga menulis pesan serupa kepada beberapa orang lain di pabrik.",
+    6: "Ujang mengaku sempat meminjamkan kunci gudang kepada seorang pemasok.",
+    7: "Lampu cadangan biasanya menyala sendiri setelah dua menit, bukan lima.",
+    8: "Tulisan 'kabel cadangan' juga ditemukan di catatan lain yang tidak berhubungan.",
+    9: "Mobil pos biasanya keluar lewat gerbang belakang saat mengambil logistik.",
+    10: "Kamera gerbang depan tidak menangkap kendaraan yang masuk lewat jalur servis.",
+    11: "Rika juga mengaku sempat meninggalkan mesin selama beberapa menit untuk minum.",
+    12: "Ada jejak asap di saluran napas korban, tetapi tidak ada luka bakar berat."
+  },
+  hotel2: {
+    1: "Akun manajer juga pernah dipakai untuk menyetujui pekerjaan lain minggu itu.",
+    2: "Buku kunci hanya diisi jika ada perpindahan, dan sering terlambat diisi.",
+    3: "Kunci master itu juga pernah dipakai untuk membuka kamar 304 sekitar pukul 21.00.",
+    4: "Katup itu sudah lama tidak diperiksa, dan teknisi sering mengabaikannya.",
+    5: "Seragam hotel yang dipakai orang itu mirip dengan seragam tiga karyawan berbeda.",
+    6: "Sartika juga menyebut bahwa seseorang sering mengunjunginya diam-diam.",
+    7: "Laporan itu juga mencantumkan biaya konsultan yang ternyata tidak pernah dibayarkan.",
+    8: "Gilang mencatat bahwa katup ventilasi tidak ia sentuh sama sekali.",
+    9: "Pintu servis juga sering digunakan oleh pemasok makanan pada malam hari.",
+    10: "Ada tamu yang sempat check-in lalu pindah kamar tanpa tercatat.",
+    11: "Denah itu menunjukkan dua jalur ventilasi, tetapi hanya satu yang tercatat dalam laporan.",
+    12: "Kadar gas dalam darah Sartika sesuai dengan kamar yang tertutup rapat selama lebih dari satu jam."
+  },
+  klinik2: {
+    1: "Kantong infus lain di lemari juga memiliki label yang hampir sama.",
+    2: "Lemari obat juga pernah dibuka dengan kunci yang sama pada siang hari, tanpa catatan.",
+    3: "Botol itu memiliki bekas cairan yang sudah mengering di sisi luarnya.",
+    4: "Dua perawat lain juga menggunakan pena biru untuk catatan tertentu.",
+    5: "Pesan itu dikirim ke grup kecil, bukan hanya ke satu orang.",
+    6: "Pada menit itu lorong juga dilewati perawat lain yang sedang membawa obat.",
+    7: "Surat itu sempat dicetak di ruang administrasi, lalu dibuang ke tempat sampah.",
+    8: "Buku jaga sering diisi setelah kejadian, bukan saat kejadian berlangsung.",
+    9: "Pintu toko apotek juga bisa dibuka dari dalam tanpa membunyikan alarm.",
+    10: "Halaman samping juga sering dipakai untuk parkir pengantar pasien.",
+    11: "Yusuf juga mencatat bahwa infusnya terasa lebih dingin dari biasanya.",
+    12: "Tidak ada tanda kekerasan, tetapi ada noda kecil di jari dokter yang diduga dari cairan infus."
+  }
+};

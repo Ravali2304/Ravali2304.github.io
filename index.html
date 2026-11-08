@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="id">
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Detektif: 10 Kasus</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e6e2d8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Satu kolom sempit seperti berkas perkara. Daftar kasus di awal, lalu tab per kasus. */
+:root{
+  --bg:#e6e2d8; --paper:#f7f4ec; --ink:#1d2026; --muted:#5f636b; --line:#cbc5b7;
+  --accent:#9c2e1c; --tape:#c98f1a; --ok:#2f6b4a;
+  color-scheme: light;
+}
+/* Default terang untuk semua pemain. Gelap hanya kalau dipilih lewat tombol tema. */
+:root[data-theme="dark"]{
+  --bg:#0f1215; --paper:#171b20; --ink:#e8e5dd; --muted:#9499a2; --line:#2b3139;
+  --accent:#e0664b; --tape:#e3b64f; --ok:#6fbf8f; color-scheme: dark;
+}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 15px/1.55 "IBM Plex Sans",system-ui,sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:640px;margin:0 auto;padding-block:20px 48px}
+header{border-bottom:1px solid var(--line);padding-bottom:14px}
+.kicker{font:500 12px "IBM Plex Mono",monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+h1{font:400 30px/1.1 "Special Elite",Georgia,serif;margin:6px 0 4px;text-wrap:balance}
+h2{font:400 24px/1.15 "Special Elite",Georgia,serif;margin:6px 0 4px;text-wrap:balance}
+.lead{margin:6px 0 0;color:var(--muted)}
+.stats{display:flex;gap:14px;flex-wrap:wrap;font:500 13px "IBM Plex Mono",monospace;margin-top:12px}
+.stats b{color:var(--accent);font-weight:600}
+nav.tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.tab{flex:1 1 auto;min-width:0;padding:9px 6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:500 13px "IBM Plex Sans",sans-serif;border-radius:4px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:12px;min-width:0}
+.card h3{margin:0 0 4px;font:400 17px "Special Elite",Georgia,serif;text-wrap:balance}
+.card p{margin:4px 0 10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.meta{font:500 12px "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.03em}
+.btn{font:600 13px "IBM Plex Sans",sans-serif;padding:8px 12px;border-radius:4px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;margin:4px 6px 4px 0}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--tape);outline-offset:2px}
+.btn.plain{border:0;padding:0;margin:0;text-align:left;font:400 17px "Special Elite",Georgia,serif;color:var(--ink)}
+.q{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.q .btn{margin:0;text-align:left;width:100%;font-weight:500}
+.answer{border-left:3px solid var(--tape);padding:4px 0 4px 12px;margin-top:8px;font-size:14px}
+.flag{display:inline-block;font:500 11px "IBM Plex Mono",monospace;padding:2px 6px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;margin:4px 0 0 0}
+.dim{opacity:.45}
+.ev-body{margin-top:8px;font-size:14px;border-top:1px dashed var(--line);padding-top:8px}
+.num{font:500 13px "IBM Plex Mono",monospace;color:var(--accent);margin-right:8px}
+.time{font:500 13px "IBM Plex Mono",monospace;color:var(--accent);min-width:64px;display:inline-block}
+.tl{display:flex;gap:6px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.tl:last-child{border-bottom:0}
+label.f{display:block;font:500 12px "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin:12px 0 4px}
+select{width:100%;font:inherit;padding:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px}
+.chk{display:flex;gap:8px;align-items:flex-start;padding:5px 0;font-size:14px}
+.chk input{margin-top:4px}
+.msg{color:var(--accent);font-size:13px;min-height:1.2em;margin:6px 0}
+.score{font:400 56px/1 "Special Elite",Georgia,serif;color:var(--accent);margin:6px 0}
+.verdict{font:400 20px "Special Elite",Georgia,serif;margin:0}
+.reveal p{margin:8px 0}
+.ill{margin-top:8px}
+.ill svg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:4px;background:var(--bg);stroke:var(--ink);fill:none;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.ill .fl{fill:var(--paper)}
+.ill .ac{fill:var(--accent);stroke:none}
+.ill .cap{fill:var(--muted);stroke:none;font:500 11px "IBM Plex Mono",monospace}
+.locked{border:1px dashed var(--line);border-radius:4px;padding:12px;margin-top:12px;font:500 13px "IBM Plex Mono",monospace;color:var(--muted)}
+.caseitem{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;width:100%;text-align:left;cursor:pointer;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:10px;font:inherit}
+.caseitem:focus-visible{outline:2px solid var(--tape);outline-offset:2px}
+.caseitem .no{font:500 13px "IBM Plex Mono",monospace;color:var(--accent)}
+.caseitem .ttl{font:400 18px "Special Elite",Georgia,serif;text-wrap:balance}
+.caseitem .sub{font-size:13px;color:var(--muted);margin-top:2px}
+.badge{font:500 11px "IBM Plex Mono",monospace;color:var(--ok);border:1px solid var(--ok);border-radius:3px;padding:2px 6px;white-space:nowrap}
+.linkish{background:none;border:0;padding:0;color:var(--muted);font:500 13px "IBM Plex Mono",monospace;cursor:pointer;margin-bottom:8px}
+.linkish:focus-visible{outline:2px solid var(--tape)}
+.story p{margin:0 0 12px;font-size:15px;line-height:1.65}
+.story p:last-child{margin-bottom:0}
+.caseitem[disabled]{opacity:.5;cursor:not-allowed}
+.phone{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;padding:9px 14px;border-radius:4px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);font:600 13px "IBM Plex Sans",sans-serif;cursor:pointer}
+.phone svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.phone:disabled{opacity:.45;cursor:default}
+.phone:focus-visible{outline:2px solid var(--tape);outline-offset:2px}
+.hint{border-left:3px solid var(--tape)}
+.hint p{margin:4px 0 0;font-size:14px}
+.card{position:relative}
+.caseitem{position:relative}
+/* Tema terang: kartu terasa seperti kertas berkas. Tema gelap tidak berubah. */
+@media all{
+  :root[data-paper="1"] .card{
+    box-shadow:0 1px 0 rgba(0,0,0,.05), 0 3px 8px rgba(0,0,0,.07);
+  }
+  :root[data-paper="1"] .ev::after{
+    content:""; position:absolute; right:0; top:0; width:20px; height:20px;
+    background:linear-gradient(225deg, var(--bg) 50%, #d8cfb8 50%);
+    border-bottom-left-radius:4px;
+  }
+  :root[data-paper="1"] .caseitem[disabled]::after{
+    content:"RAHASIA"; position:absolute; right:12px; bottom:12px;
+    font:600 11px "IBM Plex Mono",monospace; letter-spacing:.14em;
+    color:var(--accent); border:1.5px solid var(--accent); border-radius:3px; padding:2px 6px; opacity:.75;
+  }
+}
+/* Latihan: layar dibekukan, hanya tombol langkah aktif yang disorot dan bisa ditekan. */
+#tutLock{position:fixed;inset:0;z-index:50;background:rgba(12,10,8,.55)}
+/* Panduan dibuat tetap di atas layar dan tidak redup, supaya perintah selalu terbaca. */
+#game nav.tabs{z-index:65}
+/* Tab yang harus ditekan di latihan: latar kuning terang dan teks tebal. */
+#game nav.tabs .tab.tut-on{background:var(--tape);color:#1d2026;font-weight:700;border-color:transparent;outline:none}
+.tut-spot{position:relative;z-index:60}
+/* Di dalam kartu yang terang, hanya tombol target yang bisa ditekan dan tampil penuh. */
+.tut-spot :is(button,select,input):not(.tut-on){opacity:.4;pointer-events:none}
+/* Judul bukti tetap terbaca, meski tidak bisa ditekan. */
+.tut-spot .btn.plain:not(.tut-on){opacity:1}
+body.tut-lock #coachCard{position:fixed;top:12px;left:16px;right:16px;margin:0 auto;max-width:608px;z-index:70;background:var(--paper);border:2px solid var(--tape);box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:1}
+body.tut-lock #coachCard p{font:500 16px/1.5 "IBM Plex Sans",system-ui,sans-serif;color:var(--ink);margin:6px 0 0}
+body.tut-lock #coachCard .kicker{color:var(--accent)}
+.tut-on{position:relative;z-index:60;outline:2px solid var(--tape);outline-offset:3px;border-radius:4px}
+/* Navigasi tab di bawah layar, mudah dijangkau jempol. */
+#game{padding-bottom:96px}
+#game nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:65;margin:0;gap:0;flex-wrap:nowrap;background:var(--paper);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.08);padding:4px 8px max(8px,env(safe-area-inset-bottom,0px))}
+/* Saat tutorial, tab dinaikkan sedikit agar tidak tertutup watermark Netlify di pojok kanan bawah. */
+body.tut-lock #game nav.tabs{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+body.tut-lock #game{padding-bottom:124px}
+#game nav.tabs .tab{flex:1 1 0;border:0;background:none;color:var(--muted);padding:10px 2px 8px;font-size:12px;border-radius:0;min-width:0}
+#game nav.tabs .tab[aria-selected="true"]{background:none;color:var(--ink);border-color:transparent}
+.tab-ink{position:absolute;top:0;left:0;height:3px;width:0;background:var(--accent);border-radius:0 0 3px 3px;transition:transform .28s ease,width .28s ease;pointer-events:none}
+body.tut-lock #game nav.tabs .tab:not(.tut-on){opacity:.35;pointer-events:none}
+/* Kertas kasus terbuka: berkas meluncur masuk sebentar. */
+@keyframes paperIn{from{opacity:0;transform:translateY(12px) rotate(-.3deg)}to{opacity:1;transform:none}}
+#game.opening #panel{animation:paperIn .42s ease both}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+[hidden]{display:none!important}
+</style>
+
+<div class="wrap">
+  <div id="nick" hidden>
+    <button class="linkish" data-back="1" hidden>&larr; Kembali</button>
+    <header>
+      <div class="kicker">Berkas perkara · Identitas penyelidik</div>
+      <h1>Siapa namamu, Detektif?</h1>
+      <p class="lead">Nama ini akan tampil di setiap kasus yang kamu pecahkan.</p>
+    </header>
+    <div class="card" style="margin-top:16px">
+      <label class="f" for="nickInput">Nickname</label>
+      <input id="nickInput" type="text" maxlength="20" autocomplete="off" placeholder="Misal: Sherlock Bandung"
+        style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px;box-sizing:border-box">
+      <p class="msg" id="nickMsg"></p>
+      <button class="btn primary" id="nickSave">Mulai menyelidik</button>
+    </div>
+  </div>
+
+  <div id="intro" hidden>
+    <button class="linkish" data-back="1" hidden>&larr; Kembali</button>
+    <header>
+      <div class="kicker">Surat dari Pak Sudirman</div>
+      <h1>Berkas Pertama</h1>
+    </header>
+    <div class="card story" style="margin-top:16px">
+      <div id="storyText"></div>
+      <button class="btn primary" id="introGo" style="margin-top:14px">Buka berkas pertama</button>
+    </div>
+  </div>
+
+  <div id="home">
+    <button class="linkish" data-back="1" hidden>&larr; Kembali</button>
+    <header>
+      <div class="kicker">Berkas perkara · 10 kasus</div>
+      <h1>Detektif</h1>
+      <p class="lead">Sepuluh kasus pembunuhan, masing-masing dengan enam tersangka dan dua belas bukti. Setiap kasus hanya punya satu jawaban yang benar.</p>
+      <div class="stats"><span>Penyelidik: <b id="nickShow"></b></span><span>Selesai: <b id="solvedCount">0</b> dari 10</span><span>Kepercayaan: <b id="trustShow">100%</b></span></div>
+      <div class="row" style="margin-top:6px"><button class="linkish" id="changeNick" style="margin:0">Ganti nickname</button><button class="linkish" id="introAgain" style="margin:0">Baca pengantar</button><button class="linkish" id="resetProgress" style="margin:0">Riset dari awal</button><button class="linkish" data-sound="1" style="margin:0"></button><button class="linkish" data-theme-btn="1" style="margin:0"></button></div>
+    </header>
+    <p class="meta" style="margin:0 0 10px">Musik latar: "Ancient Trials" oleh Mark Hutson.</p>
+    <div id="homeNotice"></div>
+    <div id="ending" hidden></div>
+    <div id="caseList" style="margin-top:16px"></div>
+  </div>
+
+  <div id="game" hidden>
+    <button class="linkish" data-back="1" hidden>&larr; Kembali</button>
+    <header>
+      <div class="kicker" id="gKicker"></div>
+      <h1 id="gTitle"></h1>
+      <p class="lead" id="gLead"></p>
+      <div class="row" style="margin:0 0 6px"><button class="linkish" data-sound="1" style="margin:0"></button><button class="linkish" data-theme-btn="1" style="margin:0"></button></div>
+      <div class="stats">
+        <span>Langkah tersisa: <b id="steps">8</b></span>
+        <span>Bukti: <b>12</b></span>
+        <span>Tersangka: <b>6</b></span>
+      </div>
+    </header>
+    <button class="phone" id="callBtn" data-call="1" aria-label="Telepon senior untuk minta bantuan">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+      <span id="callLabel">Telepon senior</span>
+    </button>
+    <section id="panel"></section>
+    <nav class="tabs" role="tablist">
+      <span class="tab-ink" aria-hidden="true"></span>
+      <button class="tab" role="tab" data-tab="bukti" aria-selected="true">Bukti</button>
+      <button class="tab" role="tab" data-tab="tersangka" aria-selected="false">Tersangka</button>
+      <button class="tab" role="tab" data-tab="waktu" aria-selected="false">Waktu</button>
+      <button class="tab" role="tab" data-tab="papan" aria-selected="false">Papan</button>
+      <button class="tab" role="tab" data-tab="dakwaan" aria-selected="false">Dakwaan</button>
+    </nav>
+  </div>
+</div>
+
+<div id="tutLock" hidden></div>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); }); }</script>
+<script src="cases-a.js"></script>
+<script src="cases-b.js"></script>
+<script src="cases-c.js"></script>
+<script src="cases-story.js"></script>
+<script src="cases-backstory-long.js"></script>
+<script src="cases-ending.js"></script>
+<script src="cases-extra.js"></script>
+<script src="cases-hints.js"></script>
+<script src="cases-alt.js"></script>
+<script src="cases-training.js"></script>
+<script>
+// Kasus 1-5 dari CASES_A, kasus 6 (arsip) dari CASES_B, kasus 7-10 versi sulit dari CASES_C.
+const CASES = [].concat(window.CASES_A || [], window.CASES_B || [], window.CASES_C || []);
+
+let solved = {};
+try { solved = JSON.parse(localStorage.getItem("detektif-solved") || "{}"); } catch (e) { solved = {}; }
+function saveSolved(){ try { localStorage.setItem("detektif-solved", JSON.stringify(solved)); } catch (e) {} }
+
+let nickname = "";
+try { nickname = localStorage.getItem("detektif-nick") || ""; } catch (e) { nickname = ""; }
+function saveNick(n){ nickname = n; try { localStorage.setItem("detektif-nick", n); } catch (e) {} }
+
+// Kepercayaan publik (mulai 100) dan tersangka yang dipenjara karena dakwaan gagal.
+let trust = 100;
+let jailed = {};
+try {
+  const t = localStorage.getItem("detektif-trust");
+  trust = t === null ? 100 : (Number(t) || 0);
+  jailed = JSON.parse(localStorage.getItem("detektif-jailed") || "{}");
+} catch (e) { trust = 100; jailed = {}; }
+// Penanda tab bawah: garis kecil yang bergeser ke tab yang dipilih.
+function moveInk(){
+  const sel = document.querySelector('#game nav.tabs .tab[aria-selected="true"]');
+  const ink = document.querySelector("#game .tab-ink");
+  if (!sel || !ink) return;
+  ink.style.width = sel.offsetWidth + "px";
+  ink.style.transform = `translateX(${sel.offsetLeft}px)`;
+}
+window.addEventListener("resize", moveInk);
+function paperOpen(){
+  const g = $("#game");
+  g.classList.remove("opening");
+  void g.offsetWidth;
+  g.classList.add("opening");
+  // Animasi dilepas setelah selesai, supaya tidak menahan urutan tumpukan saat tutorial.
+  setTimeout(() => g.classList.remove("opening"), 500);
+}
+
+// Tampilan kepercayaan: maksimal 100%, kelebihan di atas 100 disimpan dan ditampilkan terpisah.
+function trustTxt(){
+  const shown = Math.min(100, trust);
+  const extra = trust - shown;
+  return shown + "%" + (extra > 0 ? ` (+${extra}%)` : "");
+}
+function saveProgress(){ try { localStorage.setItem("detektif-trust", String(trust)); localStorage.setItem("detektif-jailed", JSON.stringify(jailed)); localStorage.setItem("detektif-comeback", comebackUsed ? "1" : "0"); localStorage.setItem("detektif-bonus", JSON.stringify(bonusAwarded)); localStorage.setItem("detektif-training", trainingDone ? "1" : "0"); } catch (e) {} }
+// Kesempatan kedua dari senior, hanya sekali.
+let comebackUsed = false;
+try { comebackUsed = localStorage.getItem("detektif-comeback") === "1"; } catch (e) {}
+// Bonus +20 sekali per kasus yang mencapai 100%.
+let bonusAwarded = {};
+try { bonusAwarded = JSON.parse(localStorage.getItem("detektif-bonus") || "{}"); } catch (e) { bonusAwarded = {}; }
+// Latihan harus diselesaikan (minimal 80%) sebelum kasus 1 terbuka.
+let trainingDone = false;
+try { trainingDone = localStorage.getItem("detektif-training") === "1"; } catch (e) {}
+let homeNotice = "";
+// Migrasi: kasus yang sudah 100% sebelum aturan ini tetap mendapat +20 sekali.
+let bonusGranted = 0;
+for (const c of CASES){
+  if (scoreOf(c.id) >= 100 && !bonusAwarded[c.id]){ trust = trust + 20; bonusAwarded[c.id] = 1; bonusGranted++; }
+}
+if (bonusGranted){
+  homeNotice = `Bonus kepercayaan +20 untuk ${bonusGranted} kasus yang sudah sempurna. Kepercayaan sekarang ${trustTxt()}.`;
+  saveProgress();
+}
+
+// Pesan yang ditampilkan di pengantar setelah reset otomatis.
+let pendingNotice = "";
+let resetArmed = false;
+
+// Riset dari awal: semua progres dihapus, nickname tetap.
+function resetAll(notice){
+  solved = {}; trust = 100; jailed = {}; comebackUsed = false; bonusAwarded = {}; trainingDone = false;
+  saveSolved(); saveProgress();
+  cur = null; state = null;
+  navStack.length = 0;
+  pendingNotice = notice || "";
+  go("intro", renderIntro, true);
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function storyText(n){
+  const nick = esc(n);
+  const paras = [
+    `Hujan turun sejak sore ketika surat itu tiba. Tanpa kop, tanpa nama pengirim, hanya tulisan tangan yang rapi dan satu kalimat: “Kamu yang terakhir mengecek berkas itu. Sekarang saatnya bekerja, ${nick}.”`,
+    `Pengirimnya adalah Pak Sudirman, mantan kepala penyidik yang dulu dikenal tidak pernah salah menilai orang. Sepuluh tahun lalu ia pensiun dan menghilang dari dunia kepolisian. Sekarang ia mengirimkan sepuluh berkas pembunuhan yang tidak pernah sepenuhnya terungkap, dikumpulkan dari arsip yang seharusnya tidak ia simpan.`,
+    `Setiap berkas hanya bisa dibuka setelah berkas sebelumnya selesai. Pak Sudirman percaya kebenaran tidak bisa dilompati. Setiap kasus akan mengajarkanmu sesuatu tentang kasus berikutnya, dan setiap kebohongan yang kamu bongkar akan membawamu lebih dekat ke pelaku yang sebenarnya.`,
+    `Ada satu kalimat di bagian bawah surat: “Jangan percaya siapa pun sebelum bukti berbicara. Termasuk saya, ${nick}.”`
+  ];
+  return paras.map(p => `<p>${p}</p>`).join("");
+}
+
+// Babak akhir: muncul setelah semua kasus mencapai minimal 80%.
+function endingText(n){
+  const nick = esc(n);
+  const paras = [
+    `Sepuluh berkas itu sudah tertutup, dan nama ${nick} mulai dikenal di kota ini. Para penjahat yang dulu merasa aman kini berpikir dua kali sebelum bergerak. Beberapa polisi senior bahkan mulai menyebut namamu, meski kamu tidak pernah mencari pujian.`,
+    `Pagi itu sebuah surat resmi datang dari Kepolisian Kota Pesisir Utara, kota dua jam perjalanan dari rumahmu. Isinya singkat: sebuah pembunuhan yang sudah tiga bulan buntu, dengan enam tersangka dan tidak cukup bukti untuk menahan siapa pun. Mereka meminta bantuan penyelidik yang dipercaya dan tidak punya kepentingan di sana.`,
+    `Pak Sudirman menelepon sebelum kamu sempat menjawab. “Mereka tidak meminta kamu menang, ${nick}. Mereka meminta kamu melihat hal yang mereka lewatkan. Berangkatlah.”`,
+    `Kamu menutup berkas-berkas itu satu per satu. Di lembar paling bawah ada satu kalimat tulisan tangan, sama dengan surat pertama: “Sekarang kamu bukan lagi tamu di kota ini. Kota berikutnya sudah menunggu, dan pelakunya mungkin sudah tahu namamu.”`
+  ];
+  return paras.map(p => `<p>${p}</p>`).join("");
+}
+
+function renderIntro(){
+  $("#nick").hidden = true;
+  $("#home").hidden = true;
+  $("#game").hidden = true;
+  $("#intro").hidden = false;
+  $("#storyText").innerHTML = (pendingNotice ? `<p class="msg">${esc(pendingNotice)}</p>` : "") + storyText(nickname);
+  pendingNotice = "";
+  window.scrollTo(0,0);
+}
+
+function renderNick(){
+  $("#home").hidden = true;
+  $("#game").hidden = true;
+  $("#intro").hidden = true;
+  $("#nick").hidden = false;
+  $("#nickInput").value = nickname;
+  $("#nickMsg").textContent = "";
+  $("#nickInput").focus();
+}
+
+function confirmNick(){
+  const v = $("#nickInput").value.trim().replace(/\s+/g, " ");
+  if (v.length < 2){ $("#nickMsg").textContent = "Nickname minimal 2 karakter."; return; }
+  saveNick(v);
+  go("intro", renderIntro);
+}
+
+const $ = s => document.querySelector(s);
+let cur = null;
+let state = null;
+
+// Riwayat halaman: setiap layar disimpan sebagai nama dan fungsi untuk menggambarnya ulang.
+let cur2 = null;
+const navStack = [];
+function updateBack(){
+  document.querySelectorAll("[data-back]").forEach(b => { b.hidden = navStack.length === 0; });
+}
+function go(name, draw, replace){
+  if (!replace && cur2) navStack.push(cur2);
+  cur2 = { name, draw };
+  draw();
+  updateBack();
+}
+function goBack(){
+  const prev = navStack.pop();
+  if (!prev){ updateBack(); return; }
+  cur2 = prev;
+  prev.draw();
+  updateBack();
+}
+
+function freshState(){
+  return { tab:"bukti", brief:true, steps:(cur && cur.steps) || 8, asked:new Set(), sus:new Set(), open:null, evOpen:null,
+    form:{culprit:"",motive:"",method:"",ev:[]}, result:null, hints:[], callMsg:"", seen:new Set(), confronted:new Set(), board:{}, visited:new Set() };
+}
+
+// Telepon senior: maksimal 2 kali per kasus. Hanya membantu, tidak menjawab.
+const MAX_CALLS = 2;
+function callSenior(){
+  const list = ((window.CASE_HINTS || {})[cur.id]) || [];
+  if (state.hints.length >= MAX_CALLS){ state.callMsg = "Kesempatan telepon senior untuk kasus ini sudah habis."; render(); return; }
+  if (state.hints.length >= list.length){ state.callMsg = "Senior tidak punya petunjuk tambahan untuk kasus ini."; render(); return; }
+  state.hints.push(list[state.hints.length]);
+  state.callMsg = "";
+  render();
+}
+function hintCard(){
+  if (!state.hints.length && !state.callMsg) return "";
+  const items = state.hints.map((h,i) => `<article class="card hint"><div class="kicker">Petunjuk senior ${i+1} dari ${MAX_CALLS}</div><p>${esc(h)}</p></article>`).join("");
+  const msg = state.callMsg ? `<p class="msg">${esc(state.callMsg)}</p>` : "";
+  return items + msg;
+}
+
+// Skor terbaik per kasus (0-100). Data lama yang bernilai true dianggap 100.
+function scoreOf(id){
+  const v = solved[id];
+  if (v === true) return 100;
+  return Number(v) || 0;
+}
+
+// Kasus berikutnya terbuka setelah kasus sebelumnya mencapai minimal 80%.
+function isUnlocked(i){
+  return i === 0 ? trainingDone : scoreOf(CASES[i-1].id) >= 80;
+}
+
+function renderHome(){
+  if (!nickname){ renderNick(); return; }
+  $("#nick").hidden = true;
+  $("#intro").hidden = true;
+  $("#home").hidden = false;
+  $("#game").hidden = true;
+  $("#nickShow").textContent = esc(nickname);
+  $("#solvedCount").textContent = CASES.filter(c => scoreOf(c.id) >= 80).length;
+  $("#trustShow").textContent = trustTxt();
+  $("#homeNotice").innerHTML = homeNotice ? `<div class="card hint"><p>${esc(homeNotice)}</p></div>` : "";
+  homeNotice = "";
+  const allDone = CASES.every(c => scoreOf(c.id) >= 80);
+  $("#ending").hidden = !allDone;
+  $("#ending").innerHTML = allDone
+    ? `<article class="card story"><div class="kicker">Babak akhir · Kota Pesisir Utara</div>${endingText(nickname)}</article>`
+    : "";
+  $("#caseList").innerHTML = trainingCardHtml() + CASES.map((c,i) => {
+    const no = String(i+1).padStart(2,"0");
+    const open = isUnlocked(i);
+    const sc = scoreOf(c.id);
+    const badge = sc >= 100 ? `<span class="badge">Terpecahkan sempurna</span>`
+      : sc >= 80 ? `<span class="badge">Terpecahkan ${sc}%</span>`
+      : open ? "" : `<span class="badge" style="color:var(--muted);border-color:var(--muted)">Terkunci</span>`;
+    const sub = open
+      ? `${c.level ? c.level + " · " : ""}${c.suspects.length} tersangka · ${c.evidence.length} bukti${jailed[c.id] ? " · Dipenjara: " + esc(jailed[c.id]) : ""}`
+      : (i === 0 ? "Selesaikan latihan dulu" : `Capai 80% di kasus ${String(i).padStart(2,"0")} dulu`);
+    return `<button class="caseitem" data-case="${i}" ${open ? "" : "disabled"}>
+      <span><span class="no">KASUS ${no}</span><span class="ttl" style="display:block">${open ? c.title : "Berkas tertutup"}</span><span class="sub">${sub}</span></span>
+      ${badge}
+    </button>`;
+  }).join("");
+  applyTutLock();
+}
+
+// Latihan pengenalan: kartu di atas daftar kasus. Tidak masuk hitungan kasus.
+function trainingCardHtml(){
+  if (!window.TRAINING_CASE) return "";
+  return `<button class="caseitem" data-training="1">
+      <span><span class="no">LATIHAN</span><span class="ttl" style="display:block">${esc(TRAINING_CASE.title)}</span><span class="sub">Pengenalan dari Pak Sudirman · tidak mengubah kepercayaan</span></span>
+    </button>`;
+}
+// Panduan latihan: setiap langkah baru terbuka setelah pemain benar-benar melakukan tindakannya.
+// targets: satu-satunya tombol yang boleh ditekan pada langkah itu. Selain itu layar dibekukan.
+const TUTORIAL = [
+  { text: "Buka tab <b>Waktu</b> untuk melihat urutan kejadian malam itu.", done: () => state.visited.has("waktu"), targets: ['[data-tab="waktu"]'] },
+  { text: "Buka tab <b>Bukti</b> lalu ketuk <b>Bukti 02</b> untuk membaca detailnya.", done: () => state.seen.has(2), targets: ['[data-tab="bukti"]', '[data-ev="2"]'] },
+  { text: "Buka tab <b>Tersangka</b>, tekan <b>Interogasi</b> pada Robi, lalu ajukan pertanyaan pertamanya.", done: () => state.asked.has("robi0"), targets: ['[data-tab="tersangka"]', '[data-open="robi"]', '[data-q="robi0"]'] },
+  { text: "Di bawah jawaban Robi, tekan <b>Hadapkan dengan Bukti 02</b>. Ini memakai satu langkah.", done: () => state.confronted.has("robi0"), targets: ['[data-confront="robi0"]'] },
+  { text: "Buka tab <b>Papan</b>, lalu ketuk <b>02</b> pada Robi sampai tertulis <b>Bertentangan</b>.", done: () => state.board["robi|2"] === 1, targets: ['[data-tab="papan"]', '[data-board="robi|2"]'] },
+  { text: "Tekan <b>Telepon senior</b> di bagian bawah sekali untuk meminta petunjuk.", done: () => state.hints.length >= 1, targets: ['#callBtn'] },
+  { text: "Buka tab <b>Dakwaan</b>, pilih pelaku, motif, metode, dan tiga bukti yang benar, lalu ajukan.", done: () => !!(state.result && state.result.score >= 80), targets: ['[data-tab="dakwaan"]', '#panel select', '[data-evc]', '[data-submit]', '[data-reset]'] }
+];
+// Membekukan layar saat latihan: hanya langkah aktif yang bisa disentuh.
+function applyTutLock(){
+  const lock = $("#tutLock");
+  document.querySelectorAll(".tut-on").forEach(el => el.classList.remove("tut-on"));
+  const i = cur && cur.training && !$("#game").hidden ? TUTORIAL.findIndex(s => !s.done()) : -1;
+  document.querySelectorAll(".tut-spot").forEach(el => el.classList.remove("tut-spot"));
+  const els = i >= 0 ? [...document.querySelectorAll(TUTORIAL[i].targets.join(","))].filter(el => el.getClientRects().length) : [];
+  // Kalau tidak ada tombol yang bisa ditekan, jangan kunci layar agar pemain tidak buntu.
+  if (!els.length){ lock.hidden = true; document.body.classList.remove("tut-lock"); lastTutStep = -1; return; }
+  els.forEach(el => el.classList.add("tut-on"));
+  // Seluruh kartu tempat target berada ikut terang, supaya perintah dan isinya terbaca jelas.
+  new Set(els.map(el => el.closest(".card") || el)).forEach(el => el.classList.add("tut-spot"));
+  // Bukti yang sudah dibuka dan jawaban tersangka tetap terang, supaya isinya bisa dibaca setelah langkah berganti.
+  [...document.querySelectorAll("#panel .card")].filter(c => c.querySelector(".ev-body, .answer")).forEach(c => c.classList.add("tut-spot"));
+  // Petunjuk dari senior dan pesan panggilan juga harus terang, supaya bisa dibaca.
+  document.querySelectorAll("#panel .card.hint:not(#coachCard), #panel .msg").forEach(el => el.classList.add("tut-spot"));
+  lock.hidden = false;
+  document.body.classList.add("tut-lock");
+  // Saat langkah baru muncul, target digulir ke tengah layar agar tidak tertutup bar bawah.
+  // Target yang hanya ada di bar bawah tidak perlu digulir, karena bar itu sudah selalu terlihat.
+  const inPanel = els.filter(el => !el.closest("nav.tabs"));
+  if (i !== lastTutStep){
+    lastTutStep = i;
+    if (inPanel.length) inPanel[0].scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+}
+let lastTutStep = -1;
+function tutBlocked(el){
+  return document.body.classList.contains("tut-lock") && !el.closest(".tut-on");
+}
+function coachHtml(){
+  if (!cur || !cur.training) return "";
+  const i = TUTORIAL.findIndex(s => !s.done());
+  if (i < 0) return `<article class="card hint"><div class="kicker">Latihan selesai</div><p>Kamu sudah mengikuti semua langkah. Kasus pertama sekarang terbuka.</p></article>`;
+  return `<article id="coachCard" class="card hint"><div class="kicker">Panduan · langkah ${i+1} dari ${TUTORIAL.length}</div><p>${TUTORIAL[i].text}</p></article>`;
+}
+
+function openTraining(){
+  paperOpen();
+  cur = TRAINING_CASE;
+  state = freshState();
+  $("#home").hidden = true;
+  $("#game").hidden = false;
+  $("#gKicker").textContent = "Latihan · pengenalan";
+  $("#gTitle").textContent = cur.title;
+  $("#gLead").textContent = cur.lead;
+  render();
+  window.scrollTo(0,0);
+}
+
+function openCase(i){
+  paperOpen();
+  cur = CASES[i];
+  state = freshState();
+  // Kasus yang sudah 100% tidak bisa dikerjakan lagi: langsung tampilkan jawaban akhirnya.
+  if (scoreOf(cur.id) >= 100){
+    state.result = { score: 100, culpritOk: true, motiveOk: true, methodOk: true, evCorrect: 3, jailedName: "" };
+    state.tab = "dakwaan";
+  }
+  $("#home").hidden = true;
+  $("#game").hidden = false;
+  $("#gKicker").textContent = `Kasus ${String(i+1).padStart(2,"0")}${cur.level ? " · " + cur.level : ""} · ${cur.steps || 8} langkah`;
+  $("#gTitle").textContent = cur.title;
+  $("#gLead").textContent = cur.lead;
+  render();
+  window.scrollTo(0,0);
+}
+
+// Ralat tersangka untuk pertanyaan tertentu, jika ada.
+function altFor(suspectId, qi){
+  const list = ((window.ALT_ANSWERS || {})[cur.id] || {})[suspectId] || [];
+  return list.find(x => x.q === qi) || null;
+}
+
+function suspectCard(s){
+  const open = state.open === s.id;
+  let qs = "";
+  if (open){
+    qs = s.qs.map((q,i) => {
+      const k = s.id + i;
+      const done = state.asked.has(k);
+      const disabled = done || state.steps <= 0;
+      const alt = altFor(s.id, i);
+      const revised = alt && state.confronted.has(k);
+      const canConfront = alt && done && state.seen.has(alt.ev) && !revised;
+      const answerHtml = revised
+        ? `<div class="answer"><span style="text-decoration:line-through;color:var(--muted)">${q.a}</span><br><b>Ralat:</b> ${alt.a}<br><span class="flag">Jawaban berubah</span></div>`
+        : `<div class="answer">${q.a}${q.f ? `<br><span class="flag">Petunjuk baru</span>` : ""}</div>`;
+      return `<div class="q">
+        <button class="btn" data-q="${k}" ${disabled ? "disabled" : ""}>${q.q}</button>
+        ${done ? answerHtml : ""}
+        ${canConfront ? `<button class="btn" data-confront="${k}" ${state.steps <= 0 ? "disabled" : ""}>Hadapkan dengan Bukti ${String(alt.ev).padStart(2,"0")} (1 langkah)</button>` : ""}
+      </div>`;
+    }).join("");
+  }
+  const dim = state.sus.has(s.id) ? "dim" : "";
+  return `<article class="card ${dim}">
+    <div class="row" style="justify-content:space-between">
+      <h3>${s.name}, ${s.age}</h3>
+      <span class="meta">${s.role}</span>
+    </div>
+    <p>${s.desc}</p>
+    <div class="row">
+      <button class="btn" data-open="${s.id}">${open ? "Tutup" : "Interogasi"}</button>
+      <button class="btn" data-sus="${s.id}">${state.sus.has(s.id) ? "Batalkan curiga" : "Tandai curiga"}</button>
+    </div>
+    ${qs}
+  </article>`;
+}
+
+// Ilustrasi bukti: setiap bukti mendapat gambar sesuai jenisnya, dibaca dari judul dan deskripsinya.
+const ICONS = {
+  sidik: `<ellipse cx="160" cy="90" rx="62" ry="70"/><ellipse cx="160" cy="90" rx="48" ry="54"/><ellipse cx="160" cy="90" rx="34" ry="38"/><ellipse cx="160" cy="90" rx="20" ry="22"/>`,
+  kunci: `<circle cx="120" cy="90" r="24"/><circle cx="120" cy="90" r="8"/><path d="M144 90 H236 M212 90 V110 M230 90 V104"/>`,
+  botol: `<path class="fl" d="M146 38 h28 v20 q22 10 22 34 v54 q0 12 -12 12 h-48 q-12 0 -12 -12 v-54 q0 -24 22 -34z"/><rect class="ac" x="142" y="92" width="36" height="24" rx="3"/>`,
+  pil: `<rect class="fl" x="118" y="74" width="84" height="32" rx="16" transform="rotate(-22 160 90)"/><line x1="160" y1="74" x2="160" y2="106" transform="rotate(-22 160 90)"/><circle class="ac" cx="90" cy="130" r="7"/><circle cx="236" cy="50" r="6"/>`,
+  kamera: `<rect class="fl" x="92" y="52" width="136" height="92" rx="10"/><rect x="104" y="36" width="36" height="16" rx="4"/><circle cx="160" cy="98" r="26"/><circle class="ac" cx="160" cy="98" r="9"/><text class="cap" x="104" y="68">REC</text>`,
+  pesan: `<path class="fl" d="M100 56 h120 a12 12 0 0 1 12 12 v48 a12 12 0 0 1 -12 12 h-80 l-22 16 v-16 h-18 a12 12 0 0 1 -12 -12 v-48 a12 12 0 0 1 12 -12z"/><circle class="ac" cx="128" cy="92" r="4"/><circle class="ac" cx="160" cy="92" r="4"/><circle class="ac" cx="192" cy="92" r="4"/>`,
+  mobil: `<path class="fl" d="M88 112 l16 -32 h92 l22 32 v20 h-130z"/><circle class="fl" cx="118" cy="134" r="12"/><circle class="fl" cx="202" cy="134" r="12"/><path d="M112 88 h88"/>`,
+  uang: `<rect class="fl" x="88" y="60" width="144" height="72" rx="6"/><circle cx="160" cy="96" r="18"/><circle class="ac" cx="160" cy="96" r="6"/><path d="M104 74 h16 M200 118 h16"/>`,
+  dokumen: `<path class="fl" d="M112 30 h74 l30 30 v100 h-104z"/><path d="M186 30 v30 h30"/><path d="M128 76 h72 M128 94 h72 M128 112 h56"/><rect class="ac" x="128" y="122" width="22" height="8" rx="2"/>`,
+  lup: `<circle class="fl" cx="150" cy="82" r="36"/><line x1="176" y1="108" x2="214" y2="146"/><circle class="ac" cx="150" cy="82" r="6"/>`
+};
+const ICON_RULES = [
+  [/sidik|jari/, "sidik"],
+  [/kunci|brankas/, "kunci"],
+  [/botol|kemasan|kantong|infus|cairan|bumbu|sendok|pot |cangkir|gelas|karafe|minuman|wiski/, "botol"],
+  [/obat|vial|strip|pil|digoxin|midazolam|resep|tablet/, "pil"],
+  [/cctv|kamera|rekaman|lift|lorong/, "kamera"],
+  [/telepon|panggilan|pesan|whatsapp|chat|live stream|video call|surat/, "pesan"],
+  [/mobil|ojol|motor|e-toll|tol|parkir|kendaraan/, "mobil"],
+  [/uang|dana|rekap|transfer|kuitansi|saham|taruhan|miliar|juta|rupiah/, "uang"],
+  [/catatan|log|buku|jadwal|dokumen|laporan|formulir|kartu|denah|servis|daftar|manifest/, "dokumen"]
+];
+function illustration(e){
+  const t = (e.t + " " + e.d).toLowerCase();
+  let kind = "lup";
+  for (const [re, k] of ICON_RULES){ if (re.test(t)){ kind = k; break; } }
+  return `<svg viewBox="0 0 320 180" role="img" aria-label="Ilustrasi bukti ${e.n}">${ICONS[kind]}<text class="cap" x="12" y="170">BUKTI ${String(e.n).padStart(2,"0")}</text></svg>`;
+}
+
+// Kasus 5 sampai 10 punya kalimat tambahan di setiap bukti agar lebih sulit ditebak.
+function evText(e){
+  const extra = ((window.EVIDENCE_EXTRA || {})[cur.id] || {})[e.n];
+  return extra ? `${e.d} ${extra}` : e.d;
+}
+
+function evidenceCard(e){
+  const open = state.evOpen === e.n;
+  return `<article class="card ev">
+    <button class="btn plain" data-ev="${e.n}">
+      <span class="num">${String(e.n).padStart(2,"0")}</span>${e.t}
+    </button>
+    ${open ? `<div class="ill">${illustration(e)}</div><div class="ev-body">${evText(e)}</div>` : ""}
+  </article>`;
+}
+
+function briefCard(){
+  const paras = cur.story || (window.CASE_STORY || {})[cur.id] || [];
+  if (!paras.length) return "";
+  const body = paras.map(p => `<p>${esc(p).split("{nick}").join(esc(nickname))}</p>`).join("");
+  return `<article class="card story">
+    <div class="kicker">Latar belakang</div>
+    ${state.brief ? body : ""}
+    <button class="btn" data-brief="1">${state.brief ? "Sembunyikan latar belakang" : "Baca latar belakang"}</button>
+  </article>`;
+}
+
+function renderBukti(){
+  return `<p class="meta" style="margin:0 0 10px">Ketuk bukti untuk membaca detailnya.</p>` +
+    cur.evidence.map(evidenceCard).join("");
+}
+
+function renderTersangka(){
+  return `<p class="meta" style="margin:0 0 10px">Setiap interogasi memakai 1 langkah. Tandai tersangka yang kamu curigai untuk menyusun pikiran.</p>` +
+    cur.suspects.map(suspectCard).join("");
+}
+
+// Papan bukti: tandai hubungan tiap tersangka dengan bukti yang sudah dibuka. Tidak memakai langkah.
+const BOARD_REL = ["Belum", "Bertentangan", "Mencurigakan", "Cocok"];
+function renderPapan(){
+  const rows = cur.suspects.map(s => {
+    const chips = cur.evidence.filter(e => state.seen.has(e.n)).map(e => {
+      const key = s.id + "|" + e.n;
+      const r = state.board[key] || 0;
+      return `<button class="btn" data-board="${key}" style="margin:2px 4px 2px 0">${String(e.n).padStart(2,"0")} · ${BOARD_REL[r]}</button>`;
+    }).join("");
+    return `<article class="card">
+      <h3>${s.name}</h3>
+      <div class="row">${chips || `<span class="meta">Buka bukti untuk menghubungkannya.</span>`}</div>
+    </article>`;
+  }).join("");
+  return `<p class="meta" style="margin:0 0 10px">Ketuk bukti pada setiap tersangka untuk mengganti hubungannya. Papan ini tidak memakai langkah.</p>` + rows;
+}
+
+function renderWaktu(){
+  return `<div class="card">` +
+    cur.timeline.map(([t,d]) => `<div class="tl"><span class="time">${t}</span><span>${d}</span></div>`).join("") +
+    `</div>`;
+}
+
+// Hasil dakwaan. Jawaban dan kunci hanya dibuka saat skor 100.
+function resultView(){
+  const r = state.result;
+  const sc = r.score;
+  const perfect = sc >= 100;
+  const passed = sc >= 80;
+  const hasNext = CASES.indexOf(cur) < CASES.length - 1;
+  const head = perfect ? "Terpecahkan sempurna."
+    : passed ? `Terpecahkan ${sc}%.`
+    : "Belum terpecahkan.";
+  const note = perfect
+    ? `Bagus, ${esc(nickname)}. Tidak ada yang terlewat. Berkas berikutnya sudah membuka laci.`
+    : passed
+    ? `Bagus, ${esc(nickname)}, tapi masih ada yang kurang. Kamu tetap bisa lanjut ke kasus berikutnya.`
+    : `Belum cukup, ${esc(nickname)}. Periksa lagi bukti dan interogasimu, lalu coba ajukan dakwaan lagi.`;
+  const rv = cur.reveal;
+  const bs = (window.CASE_BACKSTORY_LONG || {})[cur.id] || [];
+  const bsHtml = bs.map(p => `<p>${esc(p)}</p>`).join("");
+  const endP = (window.CASE_ENDING || {})[cur.id] || [];
+  const endHtml = endP.length
+    ? endP.map(p => `<p>${esc(p)}</p>`).join("")
+    : `<p>${rv.culprit} ${rv.how}</p>`;
+  const reveal = perfect ? `
+      <hr style="border:0;border-top:1px solid var(--line)">
+      <h3 style="font:400 17px 'Special Elite',Georgia,serif;margin:10px 0 4px">Cerita di balik kasus</h3>
+      ${endHtml}
+      <h3 style="font:400 17px 'Special Elite',Georgia,serif;margin:10px 0 4px">Bukti kunci</h3>
+      <p>${rv.keys}</p>
+      <h3 style="font:400 17px 'Special Elite',Georgia,serif;margin:10px 0 4px">Pengalih perhatian</h3>
+      <p>${rv.decoys}</p>` : `
+      <hr style="border:0;border-top:1px solid var(--line)">
+      <h3 style="font:400 17px 'Special Elite',Georgia,serif;margin:10px 0 4px">Latar belakang pelaku</h3>
+      ${bsHtml}
+      <div class="locked">Nama, cara, dan bukti kunci masih terkunci. Pecahkan kasus ini dengan sempurna untuk membukanya.</div>`;
+  const nextBtn = passed && hasNext ? `<button class="btn primary" data-next="1">Kasus berikutnya</button>` : "";
+  return `<div class="card reveal">
+      <div class="kicker">Hasil dakwaan</div>
+      <div class="score">${sc}</div>
+      <p class="verdict">${head}</p>
+      <p class="meta">${passed ? "Akhir: pelaku tertangkap." : r.culpritOk ? "Akhir: bukti tidak cukup, pelaku masih bebas." : "Akhir: orang yang salah dituduh."}</p>
+      <p>${note}</p>
+      ${r.bonus ? `<p class="msg" style="color:var(--ok)">Bonus kepercayaan +20%. Kepercayaan publik sekarang ${trustTxt()}.</p>` : ""}
+      ${!cur.training && !passed && r.culpritOk ?`<div class="locked" style="color:var(--accent);border-color:var(--accent)">Pelakunya memang orang yang benar, tetapi buktimu belum cukup untuk membawanya ke pengadilan. Ia masih bebas. Kepercayaan publik turun 15%, sekarang tinggal ${trustTxt()}.</div>` : !cur.training && !passed ? (r.comeback
+        ? `<div class="locked" style="color:var(--accent);border-color:var(--accent)">Pelaku sebenarnya kabur. ${esc(r.jailedName)} dijebloskan ke penjara atas dakwaanmu. Kepercayaanmu sempat jatuh di bawah 5%, tetapi Pak Sudirman turun tangan. Ia menjaminmu di depan kepolisian dan memberimu satu kesempatan kedua. Kepercayaan dipulihkan ke 65%. Ini kesempatan terakhirmu.</div>`
+        : `<div class="locked" style="color:var(--accent);border-color:var(--accent)">Pelaku sebenarnya kabur. ${esc(r.jailedName)} dijebloskan ke penjara atas dakwaanmu. Kepercayaan publik turun 15%, sekarang tinggal ${trustTxt()}.</div>`) : ""}
+      ${reveal}
+      <div class="row" style="margin-top:12px">
+        ${nextBtn}
+        ${sc < 100 ? `<button class="btn" data-reset="1">Main ulang kasus ini</button>` : ""}
+        <button class="btn" data-home="1">Daftar kasus</button>
+      </div>
+    </div>`;
+}
+
+function renderDakwaan(){
+  if (state.result) return resultView();
+  const culpritOpts = cur.suspects.map(s => `<option value="${s.id}" ${state.form.culprit===s.id?"selected":""}>${s.name}</option>`).join("");
+  const motiveOpts = cur.motives.map(([v,l]) => `<option value="${v}" ${state.form.motive===v?"selected":""}>${l}</option>`).join("");
+  const methodOpts = cur.methods.map(([v,l]) => `<option value="${v}" ${state.form.method===v?"selected":""}>${l}</option>`).join("");
+  const evChecks = cur.evidence.map(e => `<label class="chk"><input type="checkbox" data-evc="${e.n}" ${state.form.ev.includes(e.n)?"checked":""}><span><b>${String(e.n).padStart(2,"0")}</b> ${e.t}</span></label>`).join("");
+  return `<div class="card">
+    <div class="kicker">Ajukan dakwaan</div>
+    <p class="meta" style="margin:6px 0">Pilih satu pelaku, satu motif, satu metode, dan tiga bukti yang paling kuat. Minimal 80% untuk membuka kasus berikutnya.</p>
+    <label class="f" for="culprit">Pelaku</label>
+    <select id="culprit" data-f="culprit"><option value="">Pilih tersangka</option>${culpritOpts}</select>
+    <label class="f" for="motive">Motif</label>
+    <select id="motive" data-f="motive"><option value="">Pilih motif</option>${motiveOpts}</select>
+    <label class="f" for="method">Metode</label>
+    <select id="method" data-f="method"><option value="">Pilih metode</option>${methodOpts}</select>
+    <label class="f">Tiga bukti utama</label>
+    <div id="evlist">${evChecks}</div>
+    <p class="msg" id="msg"></p>
+    <button class="btn primary" data-submit="1">Ajukan dakwaan</button>
+  </div>`;
+}
+
+function render(){
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === state.tab)));
+  $("#steps").textContent = state.steps;
+  const views = { bukti: renderBukti, tersangka: renderTersangka, waktu: renderWaktu, papan: renderPapan, dakwaan: renderDakwaan };
+  $("#panel").innerHTML = coachHtml() + hintCard() + briefCard() + views[state.tab]();
+  const left = MAX_CALLS - state.hints.length;
+  const btn = $("#callBtn");
+  btn.hidden = state.result !== null;
+  btn.disabled = left <= 0;
+  $("#callLabel").textContent = left > 0 ? `Telepon senior (${left}x)` : "Panggilan habis";
+  applyTutLock();
+  moveInk();
+}
+
+function submitCase(){
+  const f = state.form;
+  const msg = $("#msg");
+  if (!f.culprit || !f.motive || !f.method || f.ev.length !== 3){
+    msg.textContent = "Lengkapi pelaku, motif, metode, dan tepat tiga bukti.";
+    return;
+  }
+  const sol = cur.solution;
+  const culpritOk = f.culprit === sol.culprit;
+  const motiveOk = f.motive === sol.motive;
+  const methodOk = f.method === sol.method;
+  const evCorrect = f.ev.filter(n => cur.keys.includes(n)).length;
+  const score = (culpritOk ? 40 : 0) + (motiveOk ? 20 : 0) + (methodOk ? 16 : 0) + evCorrect * 8;
+  // Latihan: hanya tampilkan hasil, tanpa mengubah kepercayaan, skor, atau buka kasus.
+  if (cur.training){
+    state.result = { score, culpritOk, motiveOk, methodOk, evCorrect, jailedName: "", bonus: false, comeback: false };
+    if (score >= 80 && !trainingDone){ trainingDone = true; saveProgress(); }
+    render(); return;
+  }
+  const jailedName = (cur.suspects.find(s => s.id === f.culprit) || {}).name || "";
+  // Setiap nilai 100% di kasus mana pun menambah kepercayaan 20%, sekali per kasus.
+  const bonus = score >= 100 && !bonusAwarded[cur.id];
+  if (bonus){ trust = trust + 20; bonusAwarded[cur.id] = 1; }
+  state.result = { score, culpritOk, motiveOk, methodOk, evCorrect, jailedName, bonus, comeback: false };
+  if (score >= 80){
+    solved[cur.id] = Math.max(score, scoreOf(cur.id)); saveSolved();
+    // Pelaku sebenarnya tertangkap, tersangka salah dibebaskan.
+    if (jailed[cur.id]){ delete jailed[cur.id]; }
+    saveProgress();
+  } else {
+    // Pelaku kabur, tersangka pilihan dipenjara, kepercayaan turun.
+    trust = Math.max(0, trust - 15);
+    // Tersangka hanya dipenjara kalau pelaku yang dipilih memang salah.
+    if (culpritOk) delete jailed[cur.id]; else jailed[cur.id] = jailedName;
+    if (trust < 5){
+      // Sampai level 7: satu kesempatan kedua dengan dukungan senior, kepercayaan 65%.
+      if (isUnlocked(6) && !comebackUsed){
+        comebackUsed = true;
+        trust = 65;
+        state.result.comeback = true;
+        saveProgress();
+      } else {
+        resetAll("Kepercayaan publik jatuh di bawah 5%. Penyelidikanmu dihentikan dan semua berkas diriset. Kamu mulai lagi dari awal.");
+        return;
+      }
+    }
+    saveProgress();
+  }
+  render();
+}
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("button");
+  if (!t) return;
+  if (tutBlocked(t)) return;
+  if (t.id === "nickSave"){ confirmNick(); return; }
+  if (t.dataset.sound !== undefined){ setSound(!soundOn); return; }
+  if (t.dataset.themeBtn !== undefined){ toggleTheme(); return; }
+  if (t.dataset.back){ goBack(); return; }
+  if (t.id === "changeNick"){ go("nick", renderNick); return; }
+  if (t.id === "introGo"){ go("home", renderHome); return; }
+  if (t.id === "introAgain"){ go("intro", renderIntro); return; }
+  if (t.dataset.training){ go("game", openTraining); return; }
+  if (t.dataset.case !== undefined){
+    const i = Number(t.dataset.case);
+    if (isUnlocked(i)) go("game", () => openCase(i));
+    return;
+  }
+  if (t.dataset.home){ go("home", renderHome); return; }
+  if (t.id === "resetProgress"){
+    // Konfirmasi dua ketuk di dalam halaman (confirm() sering diblokir di iframe).
+    if (!resetArmed){
+      resetArmed = true;
+      t.textContent = "Ketuk lagi untuk hapus semua";
+      setTimeout(() => { resetArmed = false; t.textContent = "Riset dari awal"; }, 4000);
+      return;
+    }
+    resetArmed = false;
+    resetAll("");
+    return;
+  }
+  if (!cur) return;
+  if (t.dataset.next){
+    const i = CASES.indexOf(cur) + 1;
+    if (isUnlocked(i)) go("game", () => openCase(i), true);
+    return;
+  }
+  if (t.dataset.tab){ state.tab = t.dataset.tab; state.visited.add(t.dataset.tab); render(); return; }
+  if (t.dataset.brief){ state.brief = !state.brief; render(); return; }
+  if (t.dataset.open){ state.open = state.open === t.dataset.open ? null : t.dataset.open; render(); return; }
+  if (t.dataset.sus){
+    const id = t.dataset.sus;
+    state.sus.has(id) ? state.sus.delete(id) : state.sus.add(id);
+    render(); return;
+  }
+  if (t.dataset.board){
+    const k = t.dataset.board;
+    const r = ((state.board[k] || 0) + 1) % BOARD_REL.length;
+    if (r) state.board[k] = r; else delete state.board[k];
+    render(); return;
+  }
+  if (t.dataset.confront){
+    const k = t.dataset.confront;
+    if (state.confronted.has(k) || state.steps <= 0) return;
+    state.confronted.add(k); state.steps--; render(); return;
+  }
+  if (t.dataset.q){
+    const k = t.dataset.q;
+    if (state.asked.has(k) || state.steps <= 0) return;
+    state.asked.add(k); state.steps--; render(); return;
+  }
+  if (t.dataset.ev){
+    const n = Number(t.dataset.ev);
+    state.evOpen = state.evOpen === n ? null : n;
+    state.seen.add(n);
+    render(); return;
+  }
+  if (t.dataset.submit){ submitCase(); return; }
+  if (t.dataset.call){ callSenior(); return; }
+  if (t.dataset.reset){
+    state = freshState();
+    render(); return;
+  }
+});
+
+document.getElementById("nickInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") confirmNick();
+});
+
+// Geser kiri atau kanan untuk pindah tab saat mengerjakan kasus.
+const TAB_ORDER = ["bukti", "tersangka", "waktu", "papan", "dakwaan"];
+let swipeStart = null;
+const gameEl = $("#game");
+gameEl.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  // Sisi layar dibiarkan untuk gestur kembali dari browser. Input tidak ikut digeser.
+  if (e.touches.length !== 1 || t.clientX < 24 || t.clientX > innerWidth - 24 || e.target.closest("input, select, textarea")){
+    swipeStart = null; return;
+  }
+  swipeStart = { x: t.clientX, y: t.clientY, time: Date.now() };
+}, { passive: true });
+gameEl.addEventListener("touchend", e => {
+  const s = swipeStart;
+  swipeStart = null;
+  if (!s || !cur || !state) return;
+  // Selama latihan, layar dibekukan dan tidak boleh berpindah tab lewat geser.
+  if (document.body.classList.contains("tut-lock")) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - s.x, dy = t.clientY - s.y;
+  if (Date.now() - s.time > 700 || Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+  const i = TAB_ORDER.indexOf(state.tab);
+  const next = dx < 0 ? i + 1 : i - 1;
+  if (next < 0 || next >= TAB_ORDER.length) return;
+  state.tab = TAB_ORDER[next];
+  state.visited.add(state.tab);
+  render();
+}, { passive: true });
+
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (!cur) return;
+  if (tutBlocked(el)){
+    // Dikembalikan ke keadaan semula, karena langkah ini belum boleh diubah.
+    if (el.dataset.f) el.value = state.form[el.dataset.f] || "";
+    if (el.dataset.evc) el.checked = state.form.ev.includes(Number(el.dataset.evc));
+    return;
+  }
+  if (el.dataset.f){ state.form[el.dataset.f] = el.value; return; }
+  if (el.dataset.evc){
+    const n = Number(el.dataset.evc);
+    if (el.checked){
+      if (state.form.ev.length >= 3){
+        el.checked = false;
+        $("#msg").textContent = "Maksimal tiga bukti. Hapus satu dulu.";
+        return;
+      }
+      state.form.ev.push(n);
+    } else {
+      state.form.ev = state.form.ev.filter(x => x !== n);
+    }
+    const m = $("#msg"); if (m) m.textContent = "";
+  }
+});
+
+// Musik latar: "Ancient Trials" oleh Mark Hutson, diputar berulang. Default mati.
+let soundOn = false;
+try { soundOn = localStorage.getItem("detektif-sound") === "1"; } catch (e) {}
+const bgm = new Audio("ancient-trials.mp3");
+bgm.loop = true;
+bgm.volume = 0.35;
+function startRain(){ bgm.play().catch(() => {}); }
+function stopRain(){ bgm.pause(); }
+// Musik berhenti saat aplikasi ditinggalkan atau ditutup, dan lanjut lagi saat dibuka jika sedang nyala.
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) bgm.pause();
+  else if (soundOn) bgm.play().catch(() => {});
+});
+window.addEventListener("pagehide", () => bgm.pause());
+function updateSoundBtns(){
+  document.querySelectorAll("[data-sound]").forEach(b => { b.textContent = soundOn ? "Musik latar: nyala" : "Musik latar: mati"; });
+}
+function setSound(on){
+  soundOn = on;
+  try { localStorage.setItem("detektif-sound", on ? "1" : "0"); } catch (e) {}
+  if (on) startRain(); else stopRain();
+  updateSoundBtns();
+}
+
+// Tema: default ikuti perangkat. Tombol memilih terang atau gelap, dan pilihannya tersimpan.
+let themeChoice = "";
+try { themeChoice = localStorage.getItem("detektif-theme") || ""; } catch (e) {}
+function applyTheme(){
+  const root = document.documentElement;
+  if (themeChoice) root.dataset.theme = themeChoice; else delete root.dataset.theme;
+  const light = themeChoice !== "dark";
+  root.dataset.paper = light ? "1" : "0";
+  document.querySelectorAll("[data-theme-btn]").forEach(b => { b.textContent = "Tema: " + (light ? "terang" : "gelap"); });
+}
+function toggleTheme(){
+  const isLight = document.documentElement.dataset.paper === "1";
+  themeChoice = isLight ? "dark" : "light";
+  try { localStorage.setItem("detektif-theme", themeChoice); } catch (e) {}
+  applyTheme();
+}
+
+cur2 = { name: "start", draw: renderHome };
+renderHome();
+updateBack();
+updateSoundBtns();
+applyTheme();
+// Browser memblokir audio sebelum ada sentuhan, jadi suara dimulai di sentuhan pertama.
+if (soundOn) document.addEventListener("pointerdown", () => { if (soundOn) startRain(); }, { once: true });
+</script>

@@ -1,0 +1,17 @@
+{
+  "name": "Detektif: 10 Kasus",
+  "short_name": "Detektif",
+  "description": "Teka-teki pembunuhan berseri. Pecahkan sepuluh kasus di Kota Pesisir Utara.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e6e2d8",
+  "theme_color": "#e6e2d8",
+  "lang": "id",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
