@@ -1,8 +1,0 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.detektif.sepuluhkasus",
-    "sha256_cert_fingerprints": ["80:75:4B:B6:24:2E:97:C5:8B:29:AE:FF:DD:72:B8:E1:11:D7:E9:31:F0:7B:DF:03:73:15:B7:E0:76:CC:9C:CD"]
-  }
-}]
